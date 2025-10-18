@@ -8,7 +8,7 @@ Glad you found your way in here. This is my portfolio for showcasing my personal
 
 In its current state this repository includes my projects working with survey data related to a career survey of data professionals. You can find more details about the used data [below](#dataset-info).
 
-In the first project I perform data cleaning using SQL, where I prepare data from the survey for further analysis and visualizations. Do check it out in the directory called 'Data Cleaning in SQL - Data Professional Survey'!
+In the first project I perform data cleaning using SQL, where I prepare data from the survey for further analysis and visualizations. Do check it out in the directory called [Data Cleaning in SQL - Data Professional Survey](https://github.com/delissious/dps/tree/main/Data%20Cleaning%20in%20SQL%20-%20Data%20Professional%20Survey)!
 
 Further upcoming projects include exploratory data analysis on the cleaned survey data using SQL and a data visualization project with Power BI.
 
