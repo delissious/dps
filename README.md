@@ -10,7 +10,7 @@ In its current state this repository includes my projects working with survey da
 
 In the first project I perform data cleaning using SQL, where I prepare data from the survey for further analysis and visualizations. Do check it out in the directory called [Data Cleaning in SQL - Data Professional Survey](https://github.com/delissious/dps/tree/main/Data%20Cleaning%20in%20SQL%20-%20Data%20Professional%20Survey)!
 
-Further upcoming projects include exploratory data analysis on the cleaned survey data using SQL and a data visualization project with Power BI.
+Following the data cleaning project in SQL, I created an interactive dashboard in Power BI to further explore the survey results. You can find a brief report on the dashboard and the .pbix file of the dashboard itself. You can find this data visualization project in [Data Visualization in Power BI - Data Professional Survey Overview](https://github.com/delissious/dps/tree/main/Data%20Visualization%20in%20Power%20BI%20-%20Data%20Professional%20Survey%20Overview).
 
 I hope you appreciate the projects. Let me know if you have any comments or notes about my work!
 
