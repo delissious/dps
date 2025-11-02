@@ -1,40 +1,78 @@
--- PREREQUISITES
--- Create a schema to which the table is created in
+-- DATA IMPORT
 
--- Raw data: Do not modify
+CREATE DATABASE IF NOT EXISTS data_professionals;
+
+USE data_professionals;
+
+-- Table for raw data: Do not modify data in this table to preserve the original state
+-- of the data
 CREATE TABLE dps_raw (
-	unique_id TEXT,
-    email TEXT,
-    date_taken TEXT,
-    time_taken TEXT,
-    browser TEXT,
-    os TEXT,
-    city TEXT,
-    country TEXT,
-    referrer TEXT,
-    time_spent_answering TEXT,
-    current_role TEXT,
-    switched_career_to_data TEXT,
-    annual_salary_usd TEXT,
-    current_industry TEXT,
-    favorite_programming_language TEXT,
-    satisfaction_salary TINYINT UNSIGNED,
-    satisfaction_worklife_balance TINYINT UNSIGNED,
-    satisfaction_coworkers TINYINT UNSIGNED,
-    satisfaction_management TINYINT UNSIGNED,
-    satisfaction_upward_mobility TINYINT UNSIGNED,
-    satisfaction_learning TINYINT UNSIGNED,
-    difficulty_breaking_to_data TEXT,
-    priority_in_new_job TEXT,
-    gender TEXT,
-    age TINYINT UNSIGNED,
-    country_of_residence TEXT,
-    education TEXT,
-    ethnicity TEXT
+	unique_id TEXT, 									-- @col1
+	email TEXT, 										-- @col2
+	date_taken TEXT, 									-- @col3 
+	time_taken TEXT, 									-- @col4
+	browser TEXT, 										-- @col5
+	os TEXT,										    -- @col6
+	city TEXT, 											-- @col7
+	country TEXT, 										-- @col8
+	referrer TEXT, 										-- @col9
+	time_spent_answering TEXT, 							-- @col10
+	current_role TEXT, 									-- @col11
+	switched_career_to_data TEXT, 						-- @col12
+	annual_salary_usd TEXT, 							-- @col13
+	current_industry TEXT, 								-- @col14
+	favorite_programming_language TEXT, 				-- @col15
+	satisfaction_salary TINYINT UNSIGNED, 				-- @col16
+	satisfaction_worklife_balance TINYINT UNSIGNED, 	-- @col17
+	satisfaction_coworkers TINYINT UNSIGNED, 			-- @col18
+	satisfaction_management TINYINT UNSIGNED, 			-- @col19
+	satisfaction_upward_mobility TINYINT UNSIGNED, 		-- @col20
+	satisfaction_learning TINYINT UNSIGNED, 			-- @col21
+	difficulty_breaking_to_data TEXT, 					-- @col22
+	priority_in_new_job TEXT, 							-- @col23
+	gender TEXT, 										-- @col24
+	age TINYINT UNSIGNED, 								-- @col25
+	country_of_residence TEXT, 							-- @col26
+	education TEXT, 									-- @col27
+	ethnicity TEXT 										-- @col28
 );
 
--- After table 'dps_raw' is created, the CSV data needs to be imported to it. I used the
--- table data import wizard in MySQL Workbench for this.
+-- Check the directory from which data can be loaded into the database: The CSV data should be
+-- stored in the directory pointed by this system variable.
+SHOW VARIABLES LIKE 'secure_file_priv';
+	
+-- Importing the data from the CSV to the raw data table with some small formatting:
+-- Fields that are to be mapped into columns that are of numeric data type are first
+-- trimmed of preceding and trailing whitespaces. If the trimmed value is an empty
+-- string, the value is set as null.
+LOAD DATA
+	-- Naturally, this path should be modified to match the correct path for the user.
+    -- I am running the server locally on my machine, and 'secure_file_priv' is set
+    -- to the Uploads directory in the path below. The data is located on the server.
+	INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/dps2022_original.csv'
+    INTO TABLE dps_raw
+    CHARACTER SET utf8mb4
+    FIELDS
+		TERMINATED BY ';'
+	LINES
+    -- On a Windows machine
+		TERMINATED BY '\r\n'
+	-- Ignore the line containing the headers
+	IGNORE 1 LINES
+    (unique_id, email, date_taken, time_taken, browser, os, city, country, referrer,
+     time_spent_answering, current_role, switched_career_to_data, annual_salary_usd,
+     current_industry, favorite_programming_language, @col16, @col17, @col18, @col19,
+     @col20, @col21, difficulty_breaking_to_data, priority_in_new_job, gender, @col25,
+     country_of_residence, education, ethnicity)
+    -- Handling empty integer fields: Set as null
+    SET
+		satisfaction_salary = NULLIF(TRIM(@col16), ''),
+        satisfaction_worklife_balance = NULLIF(TRIM(@col17), ''),
+		satisfaction_coworkers = NULLIF(TRIM(@col18), ''),
+        satisfaction_management = NULLIF(TRIM(@col19), ''),
+        satisfaction_upward_mobility = NULLIF(TRIM(@col20), ''),
+        satisfaction_learning = NULLIF(TRIM(@col21), ''),
+        age = NULLIF(TRIM(@col25), '');
 
 -- Working copy
 CREATE TABLE dps LIKE dps_raw;
@@ -42,6 +80,7 @@ CREATE TABLE dps LIKE dps_raw;
 -- Copy data from the raw table to the working copy
 INSERT INTO dps (SELECT * FROM dps_raw);
 
+-- Working copy ready to be worked with
 SELECT * FROM dps;
 
 -- --------------------------------------------------------------------------------------------------
@@ -360,7 +399,6 @@ WHERE TRIM(favorite_programming_language) LIKE 'Other';
 UPDATE dps
 	SET favorite_programming_language = 'Other'
 WHERE favorite_programming_language LIKE 'Other:%';
-
 
 -- Reformat both columns
 UPDATE dps SET
